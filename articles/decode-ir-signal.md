@@ -1,6 +1,6 @@
 ---
 title: "Pythonでエアコンのリモコン信号をデコードしパースする"
-emoji: "🦝"
+emoji: "😴"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["HomeAutomation", "Python"]
 published: true
