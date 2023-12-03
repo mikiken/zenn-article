@@ -188,7 +188,7 @@ AEHAフォーマットにおいて、Data部のバイナリデータは最下位
 
 [^8]: AEHAフォーマットに限った話ではなく、NECフォーマットやSONYフォーマットでもLSB→MSBの順に並んでいる
 
-![[AEHAフォーマットの概要](http://elm-chan.org/docs/rc/ir_aeha.png)](http://elm-chan.org/docs/rc/ir_aeha.png)*AEHAフォーマットの概要 (http://elm-chan.org/docs/ir_format.html より引用)*
+![AEHAフォーマットの概要](https://storage.googleapis.com/zenn-user-upload/ebdad9e572f4-20231203.png)*AEHAフォーマットの概要 (http://elm-chan.org/docs/ir_format.html より引用)*
 
 また、Data部は以下のようなフィールドから構成されています。
 
