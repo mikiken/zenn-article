@@ -2,8 +2,9 @@
 title: "Pythonでエアコンのリモコン信号をデコードしパースする"
 emoji: "🦝"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ["HomeAutomation", "Python", "RaspberryPi"]
-published: false
+topics: ["HomeAutomation", "Python"]
+published: true
+published_at: 2023-12-04 00:00
 ---
 
 この記事は、[CAMPHOR- Advent Calendar 2023](https://advent.camph.net)の4日目の記事です。
