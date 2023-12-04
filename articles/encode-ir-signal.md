@@ -351,6 +351,30 @@ def encode_ir_signal(
         return frame
 ```
 
+## 実際にエアコンを操作する
+あとは[前回の記事](https://zenn.dev/mikiken/articles/decode-ir-signal)で紹介した、`irrp.py`に生成した赤外線LEDのON/OFFパターンを渡すことで、エアコンを操作することができます。
+
+```python
+from irrp import IRRP
+import json
+import io
+import encode
+
+LED_PIN = 14
+
+def ir_send(decoded_code: str):
+    ir_code_json = io.StringIO(json.dumps({"ir_code": decoded_code}))
+    ir = IRRP(no_confirm=True)
+    ir.Playback(GPIO=LED_PIN, ID="ir_code", file_object=ir_code_json)
+    ir.stop()
+
+def main():
+    ir_send(encode.encode_ir_signal("AEHA", encode.encode_mitsubishi_aircon("on", "ac_move_eye", 26), 425, 2))
+
+if __name__ == "__main__":
+    main()
+```
+
 ## 最後に
 [前回の記事](https://zenn.dev/mikiken/articles/decode-ir-signal)と合わせて、エアコンのリモコン信号を解析し、それを再現する方法について説明しました。普段、何気なく使っているリモコンが、案外複雑なことを行っていることが分かったのではないでしょうか。
 
