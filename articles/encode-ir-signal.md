@@ -355,3 +355,8 @@ def encode_ir_signal(
 [前回の記事](https://zenn.dev/mikiken/articles/decode-ir-signal)と合わせて、エアコンのリモコン信号を解析し、それを再現する方法について説明しました。普段、何気なく使っているリモコンが、案外複雑なことを行っていることが分かったのではないでしょうか。
 
 今回の記事の内容を応用することで、スマートリモコンのようなものを作成することができます。SwitchBotやNature Remoといった既製品を利用するより手間はかかりますが、自作することでよりきめ細かな操作が可能になります。皆さんも是非オレオレスマートリモコンを作ってみてください。
+
+## 参考資料
+http://elm-chan.org/docs/ir_format.html
+https://qiita.com/Hiroki_Kawakami/items/37cdb412a4e511a58103
+https://kagemomiji.hateblo.jp/entry/2016/09/03/102809
