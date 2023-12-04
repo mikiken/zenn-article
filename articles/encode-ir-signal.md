@@ -313,3 +313,40 @@ def encode_mitsubishi_aircon(
 
     return data
 ```
+
+## 送信信号のhexから赤外線LEDのON/OFFパターンを生成する
+最後に、送信信号のhexをバイナリデータにエンコードし、それを赤外線LEDのON/OFFパターンに変換する関数を作成します。[^5]
+
+[^5]: [前回の記事](https://zenn.dev/mikiken/articles/decode-ir-signal)で説明した内容の真逆の操作に相当する
+
+```python
+# リモコン信号のhexからAEHAフォーマット準拠のバイナリデータを生成する
+def encode_aeha_hex_to_bin(encoded_hex):
+    bin_data = ""
+    while len(encoded_hex) > 0:
+        byte = "{:08b}".format(int(encoded_hex[:2], 16))
+        bin_data += byte[::-1]
+        encoded_hex = encoded_hex[2:]
+    return bin_data
+
+# バイナリデータから赤外線LEDのON/OFFパターンを生成する
+def encode_ir_signal(
+    format: str,
+    encoded_hex: str,
+    unit_time: int,
+    repeat: int,
+):
+    if format == "AEHA":
+        bin_data = encode_aeha_to_bin(encoded_hex)
+        unit_frame = [unit_time * 8, unit_time * 4]
+        for b in bin_data:
+            if b == "0":
+                unit_frame.extend([unit_time, unit_time])
+            else:
+                unit_frame.extend([unit_time, unit_time * 3])
+        frame = []
+        for i in range(repeat):
+            frame += unit_frame
+            frame += [unit_time, unit_time * 30]
+        return frame
+```
