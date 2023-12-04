@@ -3,7 +3,8 @@ title: "Pythonでエアコンのリモコン信号を解析し自在に操作で
 emoji: "👋"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["HomeAutomation", "Python"]
-published: false
+published: true
+published_at: 2023-12-05 00:00
 ---
 
 この記事は、[CAMPHOR- Advent Calendar 2023](https://advent.camph.net)の5日目の記事です。
