@@ -338,7 +338,7 @@ def encode_ir_signal(
     repeat: int,
 ):
     if format == "AEHA":
-        bin_data = encode_aeha_to_bin(encoded_hex)
+        bin_data = encode_aeha_hex_to_bin(encoded_hex)
         unit_frame = [unit_time * 8, unit_time * 4]
         for b in bin_data:
             if b == "0":
