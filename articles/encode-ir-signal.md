@@ -353,7 +353,10 @@ def encode_ir_signal(
 ```
 
 ## 実際にエアコンを操作する
-あとは[前回の記事](https://zenn.dev/mikiken/articles/decode-ir-signal)で紹介した、`irrp.py`に生成した赤外線LEDのON/OFFパターンを渡すことで、エアコンを操作することができます。
+あとは[前回の記事](https://zenn.dev/mikiken/articles/decode-ir-signal)で紹介した、`irrp.py`に生成した赤外線LEDのON/OFFパターンを渡すことで、エアコンを操作することができます。[^6]
+
+[^6]: [前回の記事で紹介した`irrp.py`(改変版)](https://zenn.dev/mikiken/articles/decode-ir-signal#リモコン信号の読み取り)に、更に改変を加えたものを用いています。具体的には、赤外線信号の送受信を行う関数が、直接ファイルオブジェクトを受け取れるように変更を加えています。
+https://github.com/mikiken/Raspberrypi_IR_Remote/commit/50edb7bd74eb6da7be6381d6fd78388f667db7a9
 
 ```python
 from irrp import IRRP
