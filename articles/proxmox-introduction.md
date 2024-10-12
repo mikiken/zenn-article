@@ -21,8 +21,35 @@ published: false
 マザーボードをヤフオクにて3000円程度で落札し、これに加えてACアダプタ（2000円程度）とSSD（3000円程度）を別途用意しました。
 
 ### インストール
+[公式ページ](https://www.proxmox.com/en/downloads)でisoイメージをダウンロードし、Rufusで適当なUSBメモリに書き込んで、インストールする。
+https://dareblo.com/proxmoxve-install/
+インストールが完了し、再起動後するとWebコンソールにアクセスするためのURLが表示される。(`https://<インストール時に指定したIPアドレス>:8006/`の形式になってるはず)
 
-### パッケージリストの更新
+### aptリポジトリの変更
+初期状態で設定されているaptリポジトリは、Enterprise subscription用のものであり、課金しなければ利用できない。
+このままでは`apt install`等が行えないため、aptリポジトリを無償で使えるものに変更する。
+
+`/etc/apt/sources.list`と`/etc/apt/sources.list.d/pve-enterprise.list`を以下のように変更する。
+
+```diff:/etc/apt/sources.list
+deb http://ftp.jp.debian.org/debian bookworm main contrib
+
+deb http://ftp.jp.debian.org/debian bookworm-updates main contrib
+
+# security updates
+deb http://security.debian.org bookworm-security main contrib
+
++ deb http://download.proxmox.com/debian/pve bookworm pve-no-subscription
+```
+
+```diff:/etc/apt/sources.list.d/pve-enterprise.list
+- deb https://enterprise.proxmox.com/debian/pve bookworm pve-enterprise
++ # deb https://enterprise.proxmox.com/debian/pve bookworm pve-enterprise
+```
+
+※改めて調べた感じ、Webコンソールからでも設定できるっぽい
+`Datacenter → <nodeの名前> → Updates → Repositories`の順に押下すると、以下の画面が表示される。この画面でリポジトリの追加・無効化を行う。
+![](https://storage.googleapis.com/zenn-user-upload/d17f0d6a4fcc-20241012.png)
 
 ### 一般ユーザーの追加
 - ログインシェルの変更
