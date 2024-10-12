@@ -108,3 +108,8 @@ Realmを`Linux PAM standard authentication`にすることで、Linux自体の�
 - ジャンクPCとかミニPCを買い足してクラスタを組む
 - VMを立てて、Kubernetesに入門する
 - Terraformで宣言的に構成を管理できるようにする
+
+### 参考資料
+https://souiunogaii.hatenablog.com/entry/proxmox7-4-useradd
+
+https://docs.redhat.com/ja/documentation/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/managing-sudo-access_configuring-basic-system-settings#managing-sudo-access_configuring-basic-system-settings
