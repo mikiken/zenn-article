@@ -51,7 +51,49 @@ deb http://security.debian.org bookworm-security main contrib
 `Datacenter → <nodeの名前> → Updates → Repositories`の順に押下すると、以下の画面が表示される。この画面でリポジトリの追加・無効化を行う。
 ![](https://storage.googleapis.com/zenn-user-upload/d17f0d6a4fcc-20241012.png)
 
-### 一般ユーザーの追加
+### 管理者ユーザの追加
+ホームディレクトリの作成、ユーザ追加、パスワード設定を行う。
+```
+root@wasabi-1:~# mkdir /home/mikiken
+root@wasabi-1:~# chown mikiken:mikiken /home/mikiken
+root@wasabi-1:~# useradd mikiken -d /home/mikiken
+root@wasabi-1:~# passwd mikiken
+Enter new UNIX password:
+Retype new UNIX password:
+passwd: password updated successfully
+```
+
+sudoをインストールする
+```
+root@wasabi-1:~# apt update
+root@wasabi-1:~# apt upgrade -y
+root@wasabi-1:~# apt install -y sudo
+```
+
+上記で追加したユーザをsudoersに追加
+```
+root@wasabi-1:~# visudo
+```
+```
+# User privilege specification
+root    ALL=(ALL:ALL) ALL
+mikiken ALL=(ALL:ALL) ALL
+```
+
+上記で作成したユーザ名と同じ名前で、管理者アカウントをProxmoxに追加する。
+`Datacenter → Permissions → Groups → Create`の順に押下する。
+![](https://storage.googleapis.com/zenn-user-upload/0ae36d492993-20241012.png)
+
+上記で作成したadminグループに対し、Administrator権限を付与する。
+`Datacenter → Permissions → Add`の順に押下する。
+![](https://storage.googleapis.com/zenn-user-upload/b803700ba969-20241012.png)
+
+adminグループに、上記で作成した管理者ユーザを追加する。
+`Datacenter → Permissions → Users → Add`の順に押下する。
+![](https://storage.googleapis.com/zenn-user-upload/2541edd89f5a-20241013.png)
+Realmを`Linux PAM standard authentication`にすることで、Linux自体の認証情報を用いてProxmoxのWebコンソールにログインできるようになる。
+
+### 作成した管理者ユーザにSSH接続できるか確認
 - ログインシェルの変更
 
 ### Tailscaleをインストール
