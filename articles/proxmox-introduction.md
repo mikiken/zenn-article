@@ -52,6 +52,7 @@ deb http://security.debian.org bookworm-security main contrib
 ![](https://storage.googleapis.com/zenn-user-upload/d17f0d6a4fcc-20241012.png)
 
 ### 管理者ユーザの追加
+#### Linuxへのユーザ追加
 ホームディレクトリの作成、ユーザ追加、パスワード設定を行う。
 ```
 root@wasabi-1:~# mkdir /home/mikiken
@@ -80,7 +81,8 @@ root    ALL=(ALL:ALL) ALL
 mikiken ALL=(ALL:ALL) ALL
 ```
 
-上記で作成したユーザ名と同じ名前で、管理者アカウントをProxmoxに追加する。
+#### Proxmoxへのユーザ追加
+上記で作成したLinuxのユーザ名と同じ名前で、管理者アカウントをProxmoxに追加する。
 `Datacenter → Permissions → Groups → Create`の順に押下する。
 ![](https://storage.googleapis.com/zenn-user-upload/0ae36d492993-20241012.png)
 
@@ -93,8 +95,49 @@ adminグループに、上記で作成した管理者ユーザを追加する。
 ![](https://storage.googleapis.com/zenn-user-upload/2541edd89f5a-20241013.png)
 Realmを`Linux PAM standard authentication`にすることで、Linux自体の認証情報を用いてProxmoxのWebコンソールにログインできるようになる。
 
-### 作成した管理者ユーザにSSH接続できるか確認
-- ログインシェルの変更
+Webコンソールに、上記で設定したユーザ名とパスワードでログインできるかを確認する。
+
+#### 作成した管理者ユーザにSSHできるか確認
+まず、クライアント側（SSH接続する側）で、`ssh-keygen`して鍵を作成しておく。次に、`ssh-copy-id`コマンドで公開鍵をサーバに送る。
+```
+$ ssh-copy-id mikiken@192.168.10.112　-i wasabi-1.pub
+```
+
+作成したユーザでSSHする。
+```
+$ ssh mikiken@192.168.10.112 -i ~/.ssh/wasabi-1
+```
+もちろんユーザ名、ホスト名、秘密鍵のパスなどを毎回打つのは面倒なので、configを書いておくと楽。
+
+デフォルトシェルがshだったので、bashに変更した。
+```:@Proxmox
+$ echo $0
+sh
+$ chsh
+Password: 
+Changing the login shell for ubuntu
+Enter the new value, or press ENTER for the default
+	Login Shell [/bin/sh]: /bin/bash
+mikiken@wasabi-1:~$
+```
+#### `sshd_config`のバックアップ
+この後`sshd_config`を編集し、rootログイン・パスワード認証を禁止するので、あらかじめバックアップを取っておく。
+```bash
+mikiken@wasabi-1:~$ sudo cp /etc/ssh/sshd_config /etc/ssh/sshd_config_original
+```
+
+#### rootログイン・パスワード認証の禁止
+```bash
+mikiken@wasabi-1:~$ sudo sed -i -e "s/PermitRootLogin yes/PermitRootLogin no/g" /etc/ssh/sshd_config
+```
+```bash
+mikiken@wasabi-1:~$ sudo sed -i -e "s/#PasswordAuthentication yes/PasswordAuthentication no/g" /etc/ssh/sshd_config
+```
+
+上記の変更を反映させるために、sshdを再起動する。
+```bash
+mikiken@wasabi-1:~$ sudo systemctl restart sshd
+```
 
 ### Tailscaleをインストール
 
