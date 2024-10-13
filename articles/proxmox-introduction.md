@@ -173,6 +173,62 @@ ProxmoxのWebコンソールにアクセスし、発行した証明書の内容�
 Private Keyに`<node名>.XXXX.ts.net.key`の内容を、Certificate Chain　に`<node名>.XXXX.ts.net.crt`の内容をコピペする。
 証明書の登録後に、Webコンソールを開き直すと、証明書が適用されていることが確認できる。
 
+#### 独自ドメイン `pve.mikiken.net` に対する証明書の発行
+独自ドメインでアクセスした際も証明書エラーが出るので、Let's encryptで証明書を発行する。また、Cloudflare DNS APIを通して証明書を自動更新できるように設定する。
+
+##### Step0
+まず、証明書を発行したいドメインのDNSサーバをCloudflareに変更しておく。（自分はCloudflare registerでドメインを買ったので、この作業は不要）
+
+##### Step1
+次に、Cloudflare APIの
+- ゾーンID
+- アカウントID
+- Origin CA Key
+
+を控えておく。また、
+- APIトークン (ゾーンDNSの編集権限があるもの)
+
+を発行し、控えておく。
+
+ゾーンIDとアカウントIDは、Cloudflareのダッシュボードの概要の画面の右下に表示されている。（下記の画像で囲っている部分）
+![](https://storage.googleapis.com/zenn-user-upload/a66da056e922-20241013.png)
+
+また、上の画像の`APIトークンを取得`を押下すると、次の画面に遷移する。ここで、Origin CA Keyが確認できる。また、この画面の上部にある「**トークンを作成する**」から、APIトークンを発行できる。APIトークン発行の際、証明書を取得したいドメインゾーンのDNSレコードを編集できる権限を与えておく必要がある。
+![](https://storage.googleapis.com/zenn-user-upload/3572bc8b35e9-20241013.png)
+
+##### Step2
+次に、ProxmoxのWebコンソールに**rootで**ログインし、SSL証明書の取得・更新通知に用いるメールアドレスを登録する。
+`Datacenter → ACME → Accounts`の順に押下し、次のように入力する。
+- `Accounts Name` : <適当な名前>
+- `E-Mail` : SSL証明書の更新通知に用いたいメールアドレス
+- `ACME Directory` : Let's Encrypt V2
+- Accept TOSにチェック
+![](https://storage.googleapis.com/zenn-user-upload/05e7fe9badcf-20241013.png)
+
+さらに、証明書登録・更新を行うためのプラグインを登録する。同じ画面の下に「**Challenge Plugins**」という項目があるので**Add**をクリックし、次のように入力し、OKを押す。
+- `Plugin ID` : cloudflare ※他の名前でも可
+- `Validation Delay` : 30
+- `CF_Account_ID` : Step1のアカウントID
+- `CF_Email` : Cloudflareアカウントに登録しているメールアドレス
+- `CF_Key` : Step1のOrigin CA Key
+- `CF_Token` : Step1のAPIトークン
+- `CF_Zone_ID` : Step1のゾーンID
+
+![](https://storage.googleapis.com/zenn-user-upload/72053e12ebc7-20241013.png)
+
+##### Step3
+最後に、Step2までで設定したプラグインを用いて、証明書を発行する。
+`Datacenter → <node名> → System → Certificates → ACME → Add`の順に押下すると、次のような画面が表示される。
+![](https://storage.googleapis.com/zenn-user-upload/2f905f47ceba-20241013.png)
+この画面で、
+- `Challenge Type` : DNS
+- `Plugin` : cloudflare (Step2で設定したPlugin IDが出てくるはず)
+- `Domain` : 証明書を発行したいドメイン
+
+のように入力し、`Create → Order Certificates Now`を押下すると、証明書が発行される。
+
+ブラウザを立ち上げ直すと、証明書が適用されているはず。
+
 ### (Option) Webコンソールログイン時のメッセージを消す
 デフォルトでは、Webコンソールにログインした際に、「有効なサブスクリプションがありません」みたいなメッセージが表示される。気になる場合は、以下の手順で消すこともできるっぽい。
 https://qiita.com/flathill/items/01321c48bdf8022fa37e
