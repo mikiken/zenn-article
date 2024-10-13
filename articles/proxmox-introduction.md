@@ -155,6 +155,23 @@ pve.mikiken.net.        300     IN      A       100.73.45.25
 ※（備考）当初`pve.mikiken.net` → `<ホスト名>.XXXX.ts.net` のCNAMEレコードを設定したが、`<ホスト名>.XXXX.ts.net` → `100.x.y.z`の名前解決がうまくいかず接続できなかった。少し調べた感じ、`<ホスト名>.XXXX.ts.net` → `100.x.y.z`の部分のリクエストを、外部のDNSサーバに対して行おうとしてしまうのが原因っぽい。
 
 ### Webコンソールの証明書エラーを消す
+`<ホスト名>.XXXX.ts.net`や上記で設定したドメインでWebコンソールに接続すると、Chrome等のブラウザでは証明書エラーが表示される。これはProxmoxがデフォルトで、自己証明書を利用しているためである。
+
+#### `<ホスト名>.XXXX.ts.net` に対する証明書の発行
+まず[TailscaleのコンソールのDNSの設定画面](https://login.tailscale.com/admin/dns)で、**Magic DNS**, **HTTPS Certificates**を有効にする。
+次に、 Proxmoxのホストで、以下のコマンドを実行し、証明書を発行する。
+- `$ tailscale cert <node名>.XXXX.ts.net`
+    ```bash
+    mikiken@wasabi-1:~$ tailscale cert wasabi-1.XXXX.ts.net
+    ```
+上記のコマンドを実行すると、カレントディレクトリに`<node名>.XXXX.ts.net.crt`と`<node名>.XXXX.ts.net.key`が出力されているはず。
+ 
+ProxmoxのWebコンソールにアクセスし、発行した証明書の内容をProxmoxに登録する。
+`(画面左のnodeを選択) → Certificates → Upload Custom Certificate`の順に押下する。
+![](https://storage.googleapis.com/zenn-user-upload/5620e81a499b-20241013.png)
+ 
+Private Keyに`<node名>.XXXX.ts.net.key`の内容を、Certificate Chain　に`<node名>.XXXX.ts.net.crt`の内容をコピペする。
+証明書の登録後に、Webコンソールを開き直すと、証明書が適用されていることが確認できる。
 
 ### (Option) Webコンソールログイン時のメッセージを消す
 
