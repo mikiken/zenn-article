@@ -183,6 +183,14 @@ https://qiita.com/flathill/items/01321c48bdf8022fa37e
 - Terraformで宣言的に構成を管理できるようにする
 
 ### 参考資料
+https://qiita.com/0ta2/items/eac2eb85b89da52c20c3
+
 https://souiunogaii.hatenablog.com/entry/proxmox7-4-useradd
 
 https://docs.redhat.com/ja/documentation/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/managing-sudo-access_configuring-basic-system-settings#managing-sudo-access_configuring-basic-system-settings
+
+https://tailscale.com/kb/1133/proxmox
+
+https://scrapbox.io/dev-hihumikan/Proxmox_VE%E3%81%AESSL%2FTLS%E8%A8%BC%E6%98%8E%E6%9B%B8%E3%82%92Tailscale%E3%81%AEFQDN%E3%81%A7%E8%A7%A3%E6%B1%BA%E3%81%97%E3%81%A6%EF%BC%8C%E6%8C%81%E3%81%A3%E3%81%A6%E3%81%8F%E3%82%8B
+
+https://qiita.com/katori_m/items/20ec2773000a89103774
