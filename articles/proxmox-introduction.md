@@ -140,8 +140,19 @@ mikiken@wasabi-1:~$ sudo systemctl restart sshd
 ```
 
 ### Tailscaleをインストール
+外部からサーバにSSHしたり、Webコンソールに接続したりできるように、Proxmox(のホスト)にTailscaleを導入する。この辺を見るといいはず
+https://tailscale.com/kb/1174/install-debian-bookworm
+
+設定が完了すると、Tailscaleで割り当てられている`100.x.y.z`のIPアドレスやドメイン`<ホスト名>.XXXX.ts.net`を用いて、SSHやWebコンソールのログインができるようになる。
 
 ### 独自ドメインでアクセスできるようにする
+Tailscaleで割り当てられているドメインが若干覚えにくいので、独自ドメインでアクセスできるように、DNSに以下のようなAレコードを追加した。
+```
+pve.mikiken.net.        300     IN      A       100.73.45.25
+```
+自分のTailnetに接続している端末に限り、`pve.mikiken.net`で接続できる。
+
+※（備考）当初`pve.mikiken.net` → `<ホスト名>.XXXX.ts.net` のCNAMEレコードを設定したが、`<ホスト名>.XXXX.ts.net` → `100.x.y.z`の名前解決がうまくいかず接続できなかった。少し調べた感じ、`<ホスト名>.XXXX.ts.net` → `100.x.y.z`の部分のリクエストを、外部のDNSサーバに対して行おうとしてしまうのが原因っぽい。
 
 ### Webコンソールの証明書エラーを消す
 
